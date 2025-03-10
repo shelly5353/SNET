@@ -25,11 +25,11 @@ def index():
 
 @app.route('/pdf-editor')
 def pdf_editor():
-    return render_template('pdf_editor.html')
+    return render_template('pdf_editor.html', PROJECTS=PROJECTS)
 
 @app.route('/robotic-parking')
 def robotic_parking():
-    return render_template('robotic_parking.html')
+    return render_template('robotic_parking.html', PROJECTS=PROJECTS)
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True, port=3000, host='0.0.0.0') 

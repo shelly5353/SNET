@@ -4,15 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SNET{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <nav>
-            <a href="{{ url_for('index') }}" class="home-link">
-                <h1 class="site-title">SNET</h1>
-                <p class="site-slogan">shelly's project storage site</p>
-            </a>
+        <nav class="main-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('index') }}" class="home-link">
+                    <i class="fas fa-home home-icon"></i>
+                </a>
+                <a href="{{ url_for('index') }}" class="site-branding">
+                    <h1 class="site-title">SNET</h1>
+                    <p class="site-slogan">SHELLY'S PROJECT STORAGE SITE</p>
+                </a>
+            </div>
+            
+            <div class="nav-center">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search projects..." id="search-input">
+                    <button type="button" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="nav-right">
+                <ul class="nav-links">
+                    {% for project in PROJECTS %}
+                    <li><a href="{{ project.route }}" class="nav-link">{{ project.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </nav>
     </header>
 

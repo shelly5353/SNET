@@ -16,3 +16,6 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db 
+
+# Git
+https://github.com/[username]/SNET.git 
