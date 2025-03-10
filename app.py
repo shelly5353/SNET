@@ -1,7 +1,34 @@
 from flask import Flask, render_template, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 import os
-from contact_extractor import ContactExtractor
+import logging
+from logging.handlers import RotatingFileHandler
+import traceback
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Add file handler if not running in debug mode
+if not os.environ.get('FLASK_DEBUG'):
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+    file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+
+logger.info('Starting application...')
+
+try:
+    from contact_extractor import ContactExtractor
+    logger.info('Successfully imported ContactExtractor')
+except ImportError as e:
+    logger.error(f'Failed to import ContactExtractor: {str(e)}')
+    logger.error(traceback.format_exc())
+    raise
 
 app = Flask(__name__)
 
@@ -11,7 +38,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Ensure upload directory exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+try:
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    logger.info(f"Upload directory created/verified at {app.config['UPLOAD_FOLDER']}")
+except Exception as e:
+    logger.error(f"Failed to create upload directory: {str(e)}")
+    logger.error(traceback.format_exc())
+    raise
 
 # Configure allowed file extensions
 ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'doc', 'docx'}
@@ -30,13 +63,16 @@ def contact_extractor():
 @app.route('/contact-extractor/process', methods=['POST'])
 def process_file():
     if 'file' not in request.files:
+        logger.warning('No file part in request')
         return jsonify({'success': False, 'error': 'No file uploaded'})
     
     file = request.files['file']
     if file.filename == '':
+        logger.warning('No selected file')
         return jsonify({'success': False, 'error': 'No file selected'})
     
     if not allowed_file(file.filename):
+        logger.warning(f'Invalid file type: {file.filename}')
         return jsonify({'success': False, 'error': 'Invalid file type. Please upload an Excel or Word file.'})
     
     try:
@@ -44,17 +80,25 @@ def process_file():
         filename = secure_filename(file.filename)
         unique_filename = f"{os.urandom(8).hex()}_{filename}"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        
+        logger.info(f'Saving uploaded file: {filename} as {unique_filename}')
         file.save(filepath)
         
+        logger.info('Creating ContactExtractor instance')
         extractor = ContactExtractor()
+        
+        logger.info(f'Processing file: {filepath}')
         contacts = extractor.extract_from_file(filepath)
         
         if not contacts:
+            logger.warning('No contacts found in file')
             return jsonify({'success': False, 'error': 'No contacts found in the file'})
         
         # Save contacts to Excel file with unique name
         output_filename = f'contacts_{unique_filename}.xlsx'
         output_path = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+        
+        logger.info(f'Saving {len(contacts)} contacts to: {output_path}')
         extractor.save_contacts_to_excel(contacts, output_path)
         
         return jsonify({
@@ -64,6 +108,8 @@ def process_file():
         })
         
     except Exception as e:
+        logger.error(f'Error processing file: {str(e)}')
+        logger.error(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)})
     
     finally:
@@ -71,24 +117,33 @@ def process_file():
         if os.path.exists(filepath):
             try:
                 os.remove(filepath)
-            except:
-                pass  # Ignore cleanup errors
+                logger.info(f'Cleaned up input file: {filepath}')
+            except Exception as e:
+                logger.error(f'Failed to clean up input file: {str(e)}')
 
 @app.route('/download/<filename>')
 def download_file(filename):
     try:
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        logger.info(f'Sending file: {filepath}')
         return send_file(
-            os.path.join(app.config['UPLOAD_FOLDER'], filename),
+            filepath,
             as_attachment=True,
             download_name=filename
         )
+    except Exception as e:
+        logger.error(f'Error sending file: {str(e)}')
+        logger.error(traceback.format_exc())
+        return jsonify({'success': False, 'error': 'File not found'})
     finally:
         # Clean up the output file after download
         try:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        except:
-            pass  # Ignore cleanup errors
+            os.remove(filepath)
+            logger.info(f'Cleaned up output file: {filepath}')
+        except Exception as e:
+            logger.error(f'Failed to clean up output file: {str(e)}')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
+    logger.info(f'Starting server on port {port}')
     app.run(host='0.0.0.0', port=port) 
