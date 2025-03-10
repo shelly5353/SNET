@@ -455,4 +455,78 @@ footer {
     background-color: #d1ecf1;
     border-color: #bee5eb;
     color: #0c5460;
+}
+
+/* UP Application specific styles */
+.output-container {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--text-secondary);
+    border-radius: 4px;
+    padding: 1rem;
+    min-height: 200px;
+    margin-top: 1rem;
+}
+
+.form-control {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--text-secondary);
+    color: var(--text-primary);
+    padding: 0.7rem;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.form-group label {
+    color: var(--text-primary);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: none;
+}
+
+.alert-success {
+    background-color: rgba(74, 255, 74, 0.1);
+    color: var(--success-color);
+}
+
+.alert-error {
+    background-color: rgba(255, 74, 74, 0.1);
+    color: var(--error-color);
+}
+
+.alert-warning {
+    background-color: rgba(255, 255, 74, 0.1);
+    color: #ffff4a;
+}
+
+.alert-info {
+    background-color: rgba(74, 158, 255, 0.1);
+    color: var(--accent-color);
+}
+
+.alert h5 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.alert p {
+    margin-bottom: 0.5rem;
+}
+
+.alert a.action-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    text-decoration: none;
 } 

@@ -31,7 +31,7 @@ PROJECTS = [
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx', 'xls', 'csv', 'doc', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -87,6 +87,10 @@ def process_file():
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000, host='0.0.0.0') 
