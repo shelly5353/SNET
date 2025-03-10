@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="projects-container">
-    {% for project in projects %}
+    {% for project in PROJECTS %}
     <div class="project-card">
         <h2 class="project-title">{{ project.name }}</h2>
         <p class="project-description">{{ project.description }}</p>
