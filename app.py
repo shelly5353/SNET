@@ -4,12 +4,16 @@ import os
 from contact_extractor import ContactExtractor
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
+
+# Configure upload folder
+UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# Configure allowed file extensions
 ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'doc', 'docx'}
 
 def allowed_file(filename):
@@ -36,8 +40,10 @@ def process_file():
         return jsonify({'success': False, 'error': 'Invalid file type. Please upload an Excel or Word file.'})
     
     try:
+        # Create a unique filename to avoid conflicts
         filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        unique_filename = f"{os.urandom(8).hex()}_{filename}"
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         file.save(filepath)
         
         extractor = ContactExtractor()
@@ -46,8 +52,8 @@ def process_file():
         if not contacts:
             return jsonify({'success': False, 'error': 'No contacts found in the file'})
         
-        # Save contacts to Excel file
-        output_filename = f'contacts_{filename}.xlsx'
+        # Save contacts to Excel file with unique name
+        output_filename = f'contacts_{unique_filename}.xlsx'
         output_path = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
         extractor.save_contacts_to_excel(contacts, output_path)
         
@@ -63,15 +69,26 @@ def process_file():
     finally:
         # Clean up uploaded file
         if os.path.exists(filepath):
-            os.remove(filepath)
+            try:
+                os.remove(filepath)
+            except:
+                pass  # Ignore cleanup errors
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_file(
-        os.path.join(app.config['UPLOAD_FOLDER'], filename),
-        as_attachment=True,
-        download_name=filename
-    )
+    try:
+        return send_file(
+            os.path.join(app.config['UPLOAD_FOLDER'], filename),
+            as_attachment=True,
+            download_name=filename
+        )
+    finally:
+        # Clean up the output file after download
+        try:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        except:
+            pass  # Ignore cleanup errors
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
