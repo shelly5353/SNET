@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="project-header">
                 <h1>מחלץ אנשי קשר</h1>
-                <p>העלה קובץ Excel כדי לחלץ אנשי קשר</p>
+                <p>העלה קובץ Excel או Word כדי לחלץ אנשי קשר</p>
             </div>
         </div>
     </div>
@@ -14,9 +14,9 @@
     <div class="row mt-4">
         <div class="col-md-6">
             <div class="form-group">
-                <label for="fileInput">בחר קובץ Excel:</label>
-                <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls">
-                <small class="form-text text-muted">קבצים נתמכים: Excel (.xlsx, .xls)</small>
+                <label for="fileInput">בחר קובץ:</label>
+                <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls,.doc,.docx">
+                <small class="form-text text-muted">קבצים נתמכים: Excel (.xlsx, .xls) ו-Word (.doc, .docx)</small>
             </div>
             <button class="btn btn-primary mt-3" onclick="processFile()" id="processButton">
                 חלץ אנשי קשר
@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="output-container">
                 <div id="output">
-                    <p>בחר קובץ Excel לעיבוד</p>
+                    <p>בחר קובץ לעיבוד</p>
                 </div>
             </div>
         </div>

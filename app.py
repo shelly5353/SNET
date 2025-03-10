@@ -5,6 +5,7 @@ import subprocess
 import sys
 import pandas as pd
 import logging
+import shutil
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key in production
@@ -37,7 +38,7 @@ PROJECTS = [
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
+ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv', 'doc', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -80,37 +81,37 @@ def process_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # עיבוד הקובץ באמצעות האפליקציה UP
-        sys.path.append(os.path.join(os.path.dirname(__file__), 'UP'))
+        # העתקת הקובץ לתיקיית UP
+        up_dir = os.path.join(os.path.dirname(__file__), 'UP')
+        target_filepath = os.path.join(up_dir, filename)
+        shutil.copy2(filepath, target_filepath)
+        
+        # הוספת תיקיית UP ל-PYTHONPATH
+        sys.path.append(up_dir)
+        
+        # ייבוא המודולים הנדרשים
+        from read_docs import process_file as process_doc
         from contact_extractor import ContactExtractor
         
-        # יצירת מחלץ אנשי קשר
-        extractor = ContactExtractor()
+        # עיבוד הקובץ בהתאם לסוגו
+        if filename.lower().endswith(('.doc', '.docx')):
+            process_doc(target_filepath)
+        else:
+            extractor = ContactExtractor()
+            extractor.extract_from_xlsx(target_filepath)
         
-        # עיבוד הקובץ
-        contacts = extractor.extract_from_xlsx(filepath)
-        
-        if not contacts:
-            return jsonify({'success': False, 'error': 'לא נמצאו אנשי קשר בקובץ'})
-        
-        # הכנת קובץ תוצאות
+        # העתקת קובץ התוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+        shutil.copy2(os.path.join(up_dir, 'Data_Base.xlsx'), output_filepath)
         
-        # המרת רשימת אנשי קשר למילון
-        contacts_dict = {}
-        for contact in contacts:
-            if contact.is_valid():
-                key = f"{contact.name}_{list(contact.phones)[0] if contact.phones else ''}_{list(contact.emails)[0] if contact.emails else ''}"
-                contacts_dict[key] = contact
-        
-        # שמירת התוצאות
-        from contact_extractor import save_contacts_to_excel
-        save_contacts_to_excel(contacts_dict, output_filepath)
+        # ספירת מספר אנשי הקשר שנמצאו
+        df = pd.read_excel(output_filepath)
+        count = len(df)
         
         return jsonify({
             'success': True,
-            'count': len(contacts_dict),
+            'count': count,
             'output_file': url_for('uploaded_file', filename=output_filename)
         })
         
