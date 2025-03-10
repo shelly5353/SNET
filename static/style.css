@@ -106,7 +106,6 @@ header {
     color: var(--text-secondary);
     margin: 0.2rem 0 0 0;
     letter-spacing: 0.2em;
-    text-transform: uppercase;
 }
 
 /* Search bar styles */
