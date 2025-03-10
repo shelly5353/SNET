@@ -152,6 +152,6 @@ def download_file(filename):
             logger.error(f'Failed to clean up output file: {str(e)}')
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     logger.info(f'Starting server on port {port}')
     app.run(host='0.0.0.0', port=port) 
