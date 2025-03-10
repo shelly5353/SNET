@@ -72,12 +72,18 @@ def process_file():
         file.save(filepath)
         
         # עיבוד הקובץ באמצעות האפליקציה UP
-        from UP.app import process_file as up_process
+        sys.path.append(os.path.join(os.path.dirname(__file__), 'UP'))
+        from app import process_file as up_process
         result = up_process(filepath)
         
         # הכנת קובץ תוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+        
+        # שמירת קובץ התוצאות
+        if isinstance(result, dict) and 'output_file' in result:
+            import shutil
+            shutil.copy2(result['output_file'], output_filepath)
         
         return jsonify({
             'success': True,
