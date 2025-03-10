@@ -93,8 +93,22 @@ header {
 }
 
 .site-branding {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     text-decoration: none;
     color: var(--text-primary);
+}
+
+.site-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .site-title {
@@ -221,6 +235,30 @@ header {
 
 .nav-link:hover::after {
     width: 80%;
+}
+
+.nav-link.home-link {
+    padding: 0.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+    transition: all 0.2s ease;
+}
+
+.nav-link.home-link:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.nav-link.home-link i {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+
+.nav-link.home-link:hover i {
+    color: var(--bg-primary);
 }
 
 /* Adjust main content for fixed header */

@@ -19,13 +19,13 @@
     <header>
         <nav class="main-nav">
             <div class="nav-left">
-                <a href="{{ url_for('index') }}" class="home-link">
-                    <i class="fas fa-home home-icon"></i>
-                </a>
-                <a href="{{ url_for('index') }}" class="site-branding">
-                    <h1 class="site-title">Contact Extractor</h1>
-                    <p class="site-slogan">כלי לחילוץ אנשי קשר</p>
-                </a>
+                <div class="site-branding">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Contact Extractor Logo" class="site-logo">
+                    <div class="brand-text">
+                        <h1 class="site-title">Contact Extractor</h1>
+                        <p class="site-slogan">כלי לחילוץ אנשי קשר</p>
+                    </div>
+                </div>
             </div>
             
             <div class="nav-center">
@@ -39,8 +39,12 @@
 
             <div class="nav-right">
                 <ul class="nav-links">
-                    <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
-                    {% for project in PROJECTS %}
+                    <li>
+                        <a href="{{ url_for('index') }}" class="nav-link home-link">
+                            <i class="fas fa-home"></i>
+                        </a>
+                    </li>
+                    {% for project in projects %}
                     <li><a href="{{ project.route }}" class="nav-link">{{ project.name }}</a></li>
                     {% endfor %}
                 </ul>
