@@ -20,7 +20,7 @@
         <nav class="main-nav">
             <div class="nav-left">
                 <a href="{{ url_for('index') }}" class="home-link">
-                    <i class="fas fa-home home-icon"></i>
+                    <i class="fas fa-address-book home-icon"></i>
                 </a>
                 <a href="{{ url_for('index') }}" class="site-branding">
                     <h1 class="site-title">Contact Extractor</h1>
@@ -39,7 +39,7 @@
 
             <div class="nav-right">
                 <ul class="nav-links">
-                    <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+                    <li><a href="{{ url_for('index') }}" class="nav-link">ראשי</a></li>
                     {% for project in PROJECTS %}
                     <li><a href="{{ project.route }}" class="nav-link">{{ project.name }}</a></li>
                     {% endfor %}
