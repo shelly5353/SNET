@@ -3,9 +3,15 @@ import os
 from werkzeug.utils import secure_filename
 import subprocess
 import sys
+import pandas as pd
+import logging
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key in production
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Project list - can be moved to a configuration file later
 PROJECTS = [
@@ -31,7 +37,7 @@ PROJECTS = [
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
+ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -76,16 +82,13 @@ def process_file():
         
         # עיבוד הקובץ באמצעות האפליקציה UP
         sys.path.append(os.path.join(os.path.dirname(__file__), 'UP'))
-        from contact_extractor import ContactExtractor, save_contacts_to_excel
+        from contact_extractor import ContactExtractor
         
         # יצירת מחלץ אנשי קשר
         extractor = ContactExtractor()
         
         # עיבוד הקובץ
-        if filepath.lower().endswith(('.xlsx', '.xls')):
-            contacts = extractor.extract_from_xlsx(filepath)
-        else:
-            return jsonify({'success': False, 'error': 'סוג קובץ לא נתמך'})
+        contacts = extractor.extract_from_xlsx(filepath)
         
         if not contacts:
             return jsonify({'success': False, 'error': 'לא נמצאו אנשי קשר בקובץ'})
@@ -94,16 +97,25 @@ def process_file():
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
         
+        # המרת רשימת אנשי קשר למילון
+        contacts_dict = {}
+        for contact in contacts:
+            if contact.is_valid():
+                key = f"{contact.name}_{list(contact.phones)[0] if contact.phones else ''}_{list(contact.emails)[0] if contact.emails else ''}"
+                contacts_dict[key] = contact
+        
         # שמירת התוצאות
-        save_contacts_to_excel(contacts, output_filepath)
+        from contact_extractor import save_contacts_to_excel
+        save_contacts_to_excel(contacts_dict, output_filepath)
         
         return jsonify({
             'success': True,
-            'count': len(contacts),
+            'count': len(contacts_dict),
             'output_file': url_for('uploaded_file', filename=output_filename)
         })
         
     except Exception as e:
+        logger.error(f"Error processing file: {str(e)}")
         return jsonify({'success': False, 'error': f'שגיאה: {str(e)}'})
 
 @app.route('/uploads/<filename>')
