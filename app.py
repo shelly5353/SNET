@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 import logging
 import shutil
+import importlib.util
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key in production
@@ -13,6 +14,30 @@ app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key in
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Add UP directory to Python path
+UP_DIR = os.path.join(os.path.dirname(__file__), 'UP')
+if UP_DIR not in sys.path:
+    sys.path.append(UP_DIR)
+
+# Try to import ContactExtractor
+try:
+    from contact_extractor import ContactExtractor
+    logger.info("Successfully imported ContactExtractor")
+except ImportError as e:
+    logger.error(f"Failed to import ContactExtractor: {str(e)}")
+    # Try alternative import method
+    try:
+        spec = importlib.util.spec_from_file_location(
+            "contact_extractor",
+            os.path.join(UP_DIR, "contact_extractor.py")
+        )
+        contact_extractor_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(contact_extractor_module)
+        ContactExtractor = contact_extractor_module.ContactExtractor
+        logger.info("Successfully imported ContactExtractor using alternative method")
+    except Exception as e:
+        logger.error(f"Failed to import ContactExtractor using alternative method: {str(e)}")
 
 # Project list - can be moved to a configuration file later
 PROJECTS = [
@@ -81,25 +106,14 @@ def process_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # העתקת הקובץ לתיקיית UP
-        up_dir = os.path.join(os.path.dirname(__file__), 'UP')
-        target_filepath = os.path.join(up_dir, filename)
-        shutil.copy2(filepath, target_filepath)
-        
-        # הוספת תיקיית UP ל-PYTHONPATH
-        sys.path.append(up_dir)
-        
-        # ייבוא המודולים הנדרשים
-        from contact_extractor import ContactExtractor
-        
         # יצירת מחלץ אנשי קשר
         extractor = ContactExtractor()
         
         # עיבוד הקובץ
         if filename.lower().endswith(('.xlsx', '.xls')):
-            contacts = extractor.extract_from_xlsx(target_filepath)
+            contacts = extractor.extract_from_xlsx(filepath)
         else:
-            contacts = extractor.extract_from_doc(target_filepath)
+            contacts = extractor.extract_from_doc(filepath)
         
         if not contacts:
             return jsonify({'success': False, 'error': 'לא נמצאו אנשי קשר בקובץ'})
