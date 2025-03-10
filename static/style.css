@@ -10,8 +10,8 @@
     --nav-height: 80px;
     
     /* Font families */
-    --font-headings: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-headings: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
@@ -25,12 +25,15 @@ body {
     flex-direction: column;
     font-weight: 300;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-headings);
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
 /* Header and Navigation styles */
@@ -88,21 +91,23 @@ header {
 
 .site-title {
     font-family: var(--font-headings);
-    font-size: 2.4rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin: 0;
     color: var(--accent-color);
-    letter-spacing: -0.5px;
+    letter-spacing: -0.03em;
+    line-height: 1;
 }
 
 .site-slogan {
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     color: var(--text-secondary);
     margin: 0.2rem 0 0 0;
-    letter-spacing: 3px;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+    opacity: 0.9;
 }
 
 /* Search bar styles */
@@ -127,15 +132,16 @@ header {
     border: none;
     color: var(--text-primary);
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-family: var(--font-body);
-    font-weight: 300;
+    font-weight: 400;
     outline: none;
 }
 
 .search-bar input::placeholder {
     color: var(--text-secondary);
-    font-weight: 300;
+    font-weight: 400;
+    opacity: 0.7;
 }
 
 .search-button {
@@ -173,13 +179,14 @@ header {
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: all 0.2s ease;
-    font-size: 0.9rem;
-    letter-spacing: 0.2px;
+    font-size: 0.95rem;
+    letter-spacing: 0;
 }
 
 .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.1);
     color: var(--accent-color);
+    transform: translateY(-1px);
 }
 
 /* Adjust main content for fixed header */
@@ -215,16 +222,28 @@ main {
 }
 
 .project-title {
+    font-family: var(--font-headings);
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--accent-color);
     margin: 0 0 1rem 0;
+    letter-spacing: -0.02em;
 }
 
 .project-description {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.6;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
+    font-weight: 400;
 }
 
 .project-button {
+    font-family: var(--font-headings);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
     display: inline-block;
     background-color: var(--accent-color);
     color: white;
