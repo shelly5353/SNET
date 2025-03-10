@@ -60,6 +60,14 @@ def index():
 def contact_extractor():
     return render_template('contact_extractor.html')
 
+@app.route('/pdf-editor')
+def pdf_editor():
+    return render_template('pdf_editor.html')
+
+@app.route('/simulator')
+def simulator():
+    return render_template('simulator.html')
+
 @app.route('/contact-extractor/process', methods=['POST'])
 def process_file():
     if 'file' not in request.files:

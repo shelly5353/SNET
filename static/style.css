@@ -25,7 +25,7 @@ body {
     flex-direction: column;
     font-weight: 400;
     line-height: 1.6;
-    direction: rtl;
+    direction: ltr;
 }
 
 /* Header and Navigation styles */
@@ -55,16 +55,16 @@ header {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .site-branding {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     text-decoration: none;
     color: var(--text-primary);
-    margin-right: 2rem;
+    margin-left: 2rem;
 }
 
 .brand-text {
@@ -264,9 +264,155 @@ footer {
 }
 
 .logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: auto;
     object-fit: contain;
+}
+
+/* Project Page Styles */
+.project-page {
+    padding: 2rem;
+    margin-top: var(--nav-height);
+}
+
+.project-header {
+    margin-bottom: 2rem;
+}
+
+.project-header h1 {
+    color: var(--accent-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.project-interface {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.upload-section {
+    margin-bottom: 2rem;
+}
+
+.file-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.file-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.file-input + label {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.file-input + label:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+.operations {
+    margin-bottom: 1.5rem;
+}
+
+.operation-select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 6px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: 6px;
+    border: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.result-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.download-button:hover {
+    background-color: #357abd;
+    text-decoration: none;
+    color: white;
+}
+
+.simulation-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.result-chart, .result-data {
+    flex: 1;
+    min-width: 300px;
+    background-color: var(--bg-primary);
     border-radius: 8px;
-    margin-right: 1rem;
+    padding: 1.5rem;
+    min-height: 200px;
 } 

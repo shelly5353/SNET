@@ -1,0 +1,39 @@
+{% extends "project_page.html" %}
+
+{% block project_title %}Simulator{% endblock %}
+
+{% block project_description %}
+Run simulations and visualize results with our powerful simulator tool. Perfect for testing scenarios and analyzing outcomes.
+{% endblock %}
+
+{% block file_upload %}
+<div class="upload-section">
+    <form method="post" enctype="multipart/form-data">
+        <div class="file-input-group">
+            <input type="file" name="simulation_file" id="simulation_file" accept=".csv,.xlsx" class="file-input">
+            <label for="simulation_file">Choose data file</label>
+        </div>
+        
+        <div class="operations">
+            <select name="simulation_type" id="simulation_type" class="operation-select">
+                <option value="basic">Basic Simulation</option>
+                <option value="advanced">Advanced Simulation</option>
+                <option value="predictive">Predictive Analysis</option>
+            </select>
+        </div>
+
+        <button type="submit" class="action-button">Run Simulation</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block result_section %}
+<div class="result-section" style="display: none;">
+    <h3>Simulation Results</h3>
+    <div class="simulation-results">
+        <div class="result-chart"></div>
+        <div class="result-data"></div>
+    </div>
+    <a href="#" class="download-button">Download Results</a>
+</div>
+{% endblock %} 
