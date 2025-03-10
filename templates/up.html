@@ -4,19 +4,19 @@
 <div class="project-page">
     <div class="project-header">
         <h1>UP Application</h1>
-        <p>עיבוד וניתוח קבצים באמצעות אפליקציית UP</p>
+        <p>מחלץ אנשי קשר מקבצי Excel</p>
     </div>
     
     <div class="project-interface">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="fileInput">בחר קובץ:</label>
-                    <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls,.csv">
-                    <small class="form-text text-muted">קבצים נתמכים: Excel, CSV</small>
+                    <label for="fileInput">בחר קובץ Excel:</label>
+                    <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls">
+                    <small class="form-text text-muted">קבצים נתמכים: Excel (.xlsx, .xls)</small>
                 </div>
                 <button class="action-button" onclick="processFile()" id="processButton">
-                    <span class="button-text">עבד קובץ</span>
+                    <span class="button-text">חלץ אנשי קשר</span>
                     <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
                 </button>
             </div>
@@ -25,7 +25,7 @@
                     <h4>תוצאות:</h4>
                     <div id="output" class="output-container">
                         <div class="alert alert-info">
-                            בחר קובץ לעיבוד
+                            בחר קובץ Excel לעיבוד
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ function processFile() {
             output.innerHTML = `
                 <div class="alert alert-success">
                     <h5>הקובץ עובד בהצלחה!</h5>
-                    <p>מספר רשומות שנמצאו: ${data.count}</p>
+                    <p>מספר אנשי קשר שנמצאו: ${data.count}</p>
                     <p>קובץ התוצאות: <a href="${data.output_file}" target="_blank" class="action-button">הורד קובץ תוצאות</a></p>
                 </div>
             `;
@@ -80,7 +80,7 @@ function processFile() {
     })
     .finally(() => {
         // Reset button state
-        buttonText.textContent = 'עבד קובץ';
+        buttonText.textContent = 'חלץ אנשי קשר';
         spinner.classList.add('d-none');
         processButton.disabled = false;
     });

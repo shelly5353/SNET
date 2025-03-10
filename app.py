@@ -76,33 +76,30 @@ def process_file():
         
         # עיבוד הקובץ באמצעות האפליקציה UP
         sys.path.append(os.path.join(os.path.dirname(__file__), 'UP'))
-        from app import process_file as up_process
+        from contact_extractor import ContactExtractor, save_contacts_to_excel
         
-        # קריאה לפונקציה המעודכנת
-        result = up_process(filepath)
+        # יצירת מחלץ אנשי קשר
+        extractor = ContactExtractor()
         
-        if not result:
-            return jsonify({'success': False, 'error': 'שגיאה בעיבוד הקובץ'})
+        # עיבוד הקובץ
+        if filepath.lower().endswith(('.xlsx', '.xls')):
+            contacts = extractor.extract_from_xlsx(filepath)
+        else:
+            return jsonify({'success': False, 'error': 'סוג קובץ לא נתמך'})
+        
+        if not contacts:
+            return jsonify({'success': False, 'error': 'לא נמצאו אנשי קשר בקובץ'})
         
         # הכנת קובץ תוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
         
-        # שמירת קובץ התוצאות
-        if isinstance(result, dict):
-            if 'output_file' in result:
-                import shutil
-                shutil.copy2(result['output_file'], output_filepath)
-            elif 'processed_data' in result:
-                import pandas as pd
-                pd.DataFrame(result['processed_data']).to_excel(output_filepath, index=False)
-            elif 'excel_file' in result:
-                import shutil
-                shutil.copy2(result['excel_file'], output_filepath)
+        # שמירת התוצאות
+        save_contacts_to_excel(contacts, output_filepath)
         
         return jsonify({
             'success': True,
-            'count': result.get('count', 0),
+            'count': len(contacts),
             'output_file': url_for('uploaded_file', filename=output_filename)
         })
         
