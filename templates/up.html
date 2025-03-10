@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="project-page">
+    <div class="project-header">
+        <h1>UP Application</h1>
+        <p>Upload and process files using the UP application.</p>
+    </div>
+
+    <div class="project-interface">
+        <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+            <div class="file-input-group">
+                <input type="file" name="file" id="file" class="file-input" required>
+                <label for="file">Choose File</label>
+            </div>
+            <button type="submit" class="action-button">Process File</button>
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if 'Error' in message %}alert-error{% else %}alert-success{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %} 
