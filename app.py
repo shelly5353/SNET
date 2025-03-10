@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for, request, send_file
+from flask import Flask, render_template, flash, redirect, url_for, request, send_file, jsonify
 import os
 from werkzeug.utils import secure_filename
 import subprocess
@@ -56,43 +56,37 @@ def robotic_parking():
 def up():
     return render_template('up.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
+@app.route('/up/process', methods=['POST'])
+def process_file():
     if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
+        return jsonify({'success': False, 'error': 'No file uploaded'})
     
     file = request.files['file']
     if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
+        return jsonify({'success': False, 'error': 'No file selected'})
     
-    if file and allowed_file(file.filename):
+    try:
+        # שמירת הקובץ
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # Process the file using the UP application
-        try:
-            # Get the absolute path to the UP application
-            up_app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'UP')
-            
-            # Run the UP application with the uploaded file
-            result = subprocess.run([sys.executable, up_app_path, filepath], 
-                                 capture_output=True, 
-                                 text=True)
-            
-            if result.returncode == 0:
-                flash('File processed successfully!')
-            else:
-                flash(f'Error processing file: {result.stderr}')
-        except Exception as e:
-            flash(f'Error running UP application: {str(e)}')
+        # עיבוד הקובץ באמצעות האפליקציה UP
+        from UP.app import process_file as up_process
+        result = up_process(filepath)
         
-        return redirect(url_for('up'))
-    
-    flash('File type not allowed')
-    return redirect(request.url)
+        # הכנת קובץ תוצאות
+        output_filename = f"processed_{filename}"
+        output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
+        
+        return jsonify({
+            'success': True,
+            'count': result.get('count', 0),
+            'output_file': url_for('uploaded_file', filename=output_filename)
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000, host='0.0.0.0') 
