@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 PROJECTS = [
     {
         'id': 'up',
-        'name': 'UP Application',
-        'description': 'Process and analyze files using the UP application',
+        'name': 'Contact Extractor',
+        'description': 'Extract contact information from Excel and Word files',
         'route': '/up'
     },
     {
@@ -90,42 +90,34 @@ def process_file():
         sys.path.append(up_dir)
         
         # ייבוא המודולים הנדרשים
-        from contact_extractor import ContactExtractor, save_contacts_to_excel
+        from contact_extractor import ContactExtractor
         
         # יצירת מחלץ אנשי קשר
         extractor = ContactExtractor()
         
         # עיבוד הקובץ
-        contacts = {}
         if filename.lower().endswith(('.xlsx', '.xls')):
-            new_contacts = extractor.extract_from_xlsx(target_filepath)
+            contacts = extractor.extract_from_xlsx(target_filepath)
         else:
-            new_contacts = extractor.extract_from_doc(target_filepath)
+            contacts = extractor.extract_from_doc(target_filepath)
         
-        # המרת רשימת אנשי קשר למילון
-        for contact in new_contacts:
-            if contact.is_valid():
-                # יצירת מפתח ייחודי
-                name_key = contact.name.lower().strip()
-                phone_key = list(contact.phones)[0] if contact.phones else ""
-                email_key = list(contact.emails)[0] if contact.emails else ""
-                key = f"{name_key}_{phone_key}_{email_key}"
-                
-                # בדיקה אם יש כבר איש קשר דומה
-                found_match = False
-                for existing_key in contacts:
-                    if existing_key.startswith(name_key):
-                        contacts[existing_key].merge(contact)
-                        found_match = True
-                        break
-                
-                if not found_match:
-                    contacts[key] = contact
+        if not contacts:
+            return jsonify({'success': False, 'error': 'לא נמצאו אנשי קשר בקובץ'})
         
         # שמירת התוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
-        save_contacts_to_excel(contacts, output_filepath)
+        
+        # המרת התוצאות לקובץ Excel
+        df = pd.DataFrame([{
+            'שם': contact.name,
+            'טלפון': '; '.join(contact.phones) if contact.phones else '',
+            'אימייל': '; '.join(contact.emails) if contact.emails else '',
+            'כתובת': '; '.join(contact.addresses) if contact.addresses else '',
+            'קובץ מקור': filename
+        } for contact in contacts])
+        
+        df.to_excel(output_filepath, index=False)
         
         return jsonify({
             'success': True,
