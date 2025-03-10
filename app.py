@@ -53,15 +53,15 @@ def index():
 
 @app.route('/pdf-editor')
 def pdf_editor():
-    return render_template('pdf_editor.html', PROJECTS=PROJECTS)
+    return render_template('pdf_editor.html', projects=PROJECTS)
 
 @app.route('/robotic-parking')
 def robotic_parking():
-    return render_template('robotic_parking.html', PROJECTS=PROJECTS)
+    return render_template('robotic_parking.html', projects=PROJECTS)
 
 @app.route('/contact-extractor')
 def contact_extractor():
-    return render_template('contact_extractor.html', PROJECTS=PROJECTS)
+    return render_template('contact_extractor.html', projects=PROJECTS)
 
 @app.route('/contact-extractor/process', methods=['POST'])
 def process_file():
