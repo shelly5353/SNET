@@ -71,16 +71,18 @@ header {
 }
 
 .site-title {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 2rem;
+    font-weight: 700;
     margin: 0;
-    color: var(--text-primary);
+    color: var(--accent-color);
+    letter-spacing: -0.02em;
 }
 
 .site-slogan {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
     margin: 0;
+    letter-spacing: 0.02em;
 }
 
 /* Navigation links */
