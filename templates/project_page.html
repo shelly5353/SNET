@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="project-page">
+    <div class="project-header">
+        <h1>{% block project_title %}Project Title{% endblock %}</h1>
+        <p class="project-description">{% block project_description %}Project Description{% endblock %}</p>
+    </div>
+
+    <div class="project-interface">
+        {% block file_upload %}
+        <div class="upload-section">
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="file" id="file" class="file-input">
+                <button type="submit" class="action-button">Upload & Process</button>
+            </form>
+        </div>
+        {% endblock %}
+
+        {% block project_content %}
+        <!-- Project specific content goes here -->
+        {% endblock %}
+
+        <div class="loading-indicator" style="display: none;">
+            Processing...
+        </div>
+
+        {% block result_section %}
+        <div class="result-section" style="display: none;">
+            <!-- Results will be displayed here -->
+        </div>
+        {% endblock %}
+    </div>
+
+    <a href="{{ url_for('index') }}" class="back-button">Back to Home</a>
+</div>
+{% endblock %} 

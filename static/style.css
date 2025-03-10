@@ -1,0 +1,212 @@
+/* Base styles and variables */
+:root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --accent-color: #4a9eff;
+    --error-color: #ff4a4a;
+    --success-color: #4aff4a;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header styles */
+header {
+    background-color: var(--bg-secondary);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.home-link {
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.site-title {
+    font-size: 2.5rem;
+    margin: 0;
+    color: var(--accent-color);
+}
+
+.site-slogan {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+}
+
+/* Main content */
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Project cards */
+.projects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.project-card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+}
+
+.project-title {
+    color: var(--accent-color);
+    margin: 0 0 1rem 0;
+}
+
+.project-description {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.project-button {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.project-button:hover {
+    background-color: #357abd;
+}
+
+/* Project page styles */
+.project-page {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.project-header {
+    margin-bottom: 2rem;
+}
+
+.project-interface {
+    margin: 2rem 0;
+}
+
+/* Form elements */
+.file-input-group {
+    margin-bottom: 1rem;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-input + label {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+}
+
+.file-input + label:hover {
+    background-color: #404040;
+}
+
+.operation-select {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 300px;
+}
+
+.action-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: #357abd;
+}
+
+/* Alert messages */
+.alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: var(--success-color);
+    color: #003300;
+}
+
+.alert-error {
+    background-color: var(--error-color);
+    color: #330000;
+}
+
+/* Loading indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Footer */
+footer {
+    background-color: var(--bg-secondary);
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Back button */
+.back-button {
+    display: inline-block;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 2rem;
+    transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #404040;
+} 

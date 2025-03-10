@@ -1,0 +1,35 @@
+{% extends "project_page.html" %}
+
+{% block project_title %}PDF Editor{% endblock %}
+
+{% block project_description %}
+Upload and edit PDF files easily. Supports various operations like merging, splitting, and adding watermarks.
+{% endblock %}
+
+{% block file_upload %}
+<div class="upload-section">
+    <form method="post" enctype="multipart/form-data">
+        <div class="file-input-group">
+            <input type="file" name="pdf_file" id="pdf_file" accept=".pdf" class="file-input">
+            <label for="pdf_file">Choose PDF file</label>
+        </div>
+        
+        <div class="operations">
+            <select name="operation" id="operation" class="operation-select">
+                <option value="merge">Merge PDFs</option>
+                <option value="split">Split PDF</option>
+                <option value="watermark">Add Watermark</option>
+            </select>
+        </div>
+
+        <button type="submit" class="action-button">Process PDF</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block result_section %}
+<div class="result-section" style="display: none;">
+    <h3>Processed PDF</h3>
+    <a href="#" class="download-button">Download Result</a>
+</div>
+{% endblock %} 
