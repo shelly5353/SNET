@@ -17,9 +17,9 @@ logger = logging.getLogger(__name__)
 # Project list - can be moved to a configuration file later
 PROJECTS = [
     {
-        'id': 'up',
-        'name': 'Contact Extractor',
-        'description': 'Extract contact information from Excel and Word files',
+        'id': 'contact-extractor',
+        'name': 'מחלץ אנשי קשר',
+        'description': 'חילוץ אנשי קשר מקבצי Excel ו-Word',
         'route': '/up'
     },
     {
