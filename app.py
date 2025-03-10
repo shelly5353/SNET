@@ -61,7 +61,7 @@ def robotic_parking():
 
 @app.route('/contact-extractor')
 def contact_extractor():
-    return render_template('contact_extractor.html')
+    return render_template('contact_extractor.html', PROJECTS=PROJECTS)
 
 @app.route('/contact-extractor/process', methods=['POST'])
 def process_file():
