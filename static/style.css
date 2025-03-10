@@ -7,7 +7,7 @@
     --accent-color: #4a9eff;
     --error-color: #ff4a4a;
     --success-color: #4aff4a;
-    --nav-height: 70px;
+    --nav-height: 90px;
     
     /* Font families */
     --font-headings: 'DM Sans', sans-serif;
@@ -46,8 +46,8 @@ header {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 2rem;
-    max-width: 1400px;
+    padding: 0 4rem;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -61,10 +61,10 @@ header {
 .site-branding {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     text-decoration: none;
     color: var(--text-primary);
-    margin-left: 2rem;
+    margin-left: 3rem;
 }
 
 .brand-text {
@@ -264,7 +264,7 @@ footer {
 }
 
 .logo {
-    width: 50px;
+    width: 80px;
     height: auto;
     object-fit: contain;
 }
