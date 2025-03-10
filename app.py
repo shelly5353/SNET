@@ -10,6 +10,12 @@ app.secret_key = 'your-secret-key-here'  # Change this to a secure secret key in
 # Project list - can be moved to a configuration file later
 PROJECTS = [
     {
+        'id': 'up',
+        'name': 'UP Application',
+        'description': 'Process and analyze files using the UP application',
+        'route': '/up'
+    },
+    {
         'id': 'pdf-editor',
         'name': 'PDF Editor',
         'description': 'Edit and manipulate PDF files easily',

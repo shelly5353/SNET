@@ -40,7 +40,6 @@
             <div class="nav-right">
                 <ul class="nav-links">
                     <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
-                    <li><a href="{{ url_for('up') }}" class="nav-link">UP</a></li>
                     {% for project in PROJECTS %}
                     <li><a href="{{ project.route }}" class="nav-link">{{ project.name }}</a></li>
                     {% endfor %}
