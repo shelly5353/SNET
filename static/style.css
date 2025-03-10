@@ -10,8 +10,8 @@
     --nav-height: 80px;
     
     /* Font families */
-    --font-headings: 'Outfit', sans-serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-headings: 'Archivo Black', sans-serif;
+    --font-body: 'Roboto Condensed', sans-serif;
 }
 
 body {
@@ -31,9 +31,10 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-headings);
-    font-weight: 600;
+    font-weight: 400; /* Archivo Black comes in only one weight */
     line-height: 1.2;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 /* Header and Navigation styles */
@@ -91,23 +92,21 @@ header {
 
 .site-title {
     font-family: var(--font-headings);
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.8rem;
     margin: 0;
     color: var(--accent-color);
-    letter-spacing: -0.03em;
+    letter-spacing: 0.03em;
     line-height: 1;
 }
 
 .site-slogan {
     font-family: var(--font-body);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--text-secondary);
     margin: 0.2rem 0 0 0;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    opacity: 0.9;
 }
 
 /* Search bar styles */
@@ -139,8 +138,7 @@ header {
 }
 
 .search-bar input::placeholder {
-    color: var(--text-secondary);
-    font-weight: 400;
+    font-weight: 300;
     opacity: 0.7;
 }
 
@@ -172,15 +170,16 @@ header {
 }
 
 .nav-link {
-    font-family: var(--font-headings);
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-weight: 600;
     color: var(--text-primary);
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     transition: all 0.2s ease;
-    font-size: 0.95rem;
-    letter-spacing: 0;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .nav-link:hover {
@@ -223,27 +222,27 @@ main {
 
 .project-title {
     font-family: var(--font-headings);
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.8rem;
     color: var(--accent-color);
     margin: 0 0 1rem 0;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
 }
 
 .project-description {
     font-family: var(--font-body);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.5;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     font-weight: 400;
 }
 
 .project-button {
-    font-family: var(--font-headings);
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-weight: 600;
     font-size: 0.9rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     display: inline-block;
     background-color: var(--accent-color);
     color: white;
