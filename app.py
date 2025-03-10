@@ -38,7 +38,7 @@ PROJECTS = [
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv', 'doc', 'docx'}
+ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'doc', 'docx'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -90,28 +90,46 @@ def process_file():
         sys.path.append(up_dir)
         
         # ייבוא המודולים הנדרשים
-        from read_docs import process_file as process_doc
-        from contact_extractor import ContactExtractor
+        from contact_extractor import ContactExtractor, save_contacts_to_excel
         
-        # עיבוד הקובץ בהתאם לסוגו
-        if filename.lower().endswith(('.doc', '.docx')):
-            process_doc(target_filepath)
+        # יצירת מחלץ אנשי קשר
+        extractor = ContactExtractor()
+        
+        # עיבוד הקובץ
+        contacts = {}
+        if filename.lower().endswith(('.xlsx', '.xls')):
+            new_contacts = extractor.extract_from_xlsx(target_filepath)
         else:
-            extractor = ContactExtractor()
-            extractor.extract_from_xlsx(target_filepath)
+            new_contacts = extractor.extract_from_doc(target_filepath)
         
-        # העתקת קובץ התוצאות
+        # המרת רשימת אנשי קשר למילון
+        for contact in new_contacts:
+            if contact.is_valid():
+                # יצירת מפתח ייחודי
+                name_key = contact.name.lower().strip()
+                phone_key = list(contact.phones)[0] if contact.phones else ""
+                email_key = list(contact.emails)[0] if contact.emails else ""
+                key = f"{name_key}_{phone_key}_{email_key}"
+                
+                # בדיקה אם יש כבר איש קשר דומה
+                found_match = False
+                for existing_key in contacts:
+                    if existing_key.startswith(name_key):
+                        contacts[existing_key].merge(contact)
+                        found_match = True
+                        break
+                
+                if not found_match:
+                    contacts[key] = contact
+        
+        # שמירת התוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
-        shutil.copy2(os.path.join(up_dir, 'Data_Base.xlsx'), output_filepath)
-        
-        # ספירת מספר אנשי הקשר שנמצאו
-        df = pd.read_excel(output_filepath)
-        count = len(df)
+        save_contacts_to_excel(contacts, output_filepath)
         
         return jsonify({
             'success': True,
-            'count': count,
+            'count': len(contacts),
             'output_file': url_for('uploaded_file', filename=output_filename)
         })
         
