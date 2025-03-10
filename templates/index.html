@@ -2,12 +2,14 @@
 
 {% block content %}
 <div class="projects-container">
-    {% for project in PROJECTS %}
     <div class="project-card">
-        <h2 class="project-title">{{ project.name }}</h2>
-        <p class="project-description">{{ project.description }}</p>
-        <a href="{{ project.route }}" class="project-button">צפה בפרויקט</a>
+        <h2 class="project-title">Contact Extractor</h2>
+        <p class="project-description">
+            Extract contacts from Excel and Word files efficiently. Our tool helps you gather contact information from various document formats and consolidates them into a single, organized Excel file.
+        </p>
+        <a href="/contact-extractor" class="project-button">
+            <i class="fas fa-address-book me-2"></i>Start Extracting
+        </a>
     </div>
-    {% endfor %}
 </div>
 {% endblock %} 
