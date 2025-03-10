@@ -82,6 +82,11 @@ header {
 .home-icon {
     font-size: 1.5rem;
     color: var(--accent-color);
+    transition: transform 0.2s ease;
+}
+
+.home-link:hover .home-icon {
+    transform: scale(1.1);
 }
 
 .site-branding {
@@ -97,6 +102,9 @@ header {
     color: var(--accent-color);
     letter-spacing: -0.02em;
     line-height: 1;
+    background: linear-gradient(45deg, var(--accent-color), #357abd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .site-slogan {
@@ -106,6 +114,7 @@ header {
     color: var(--text-secondary);
     margin: 0.25rem 0 0 0;
     letter-spacing: 0.05em;
+    opacity: 0.8;
 }
 
 /* Search bar styles */
@@ -122,6 +131,12 @@ header {
     border-radius: 24px;
     padding: 0.5rem;
     border: 1px solid var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
 }
 
 .search-bar input {
@@ -137,7 +152,7 @@ header {
 }
 
 .search-bar input::placeholder {
-    font-weight: 400;
+    color: var(--text-secondary);
     opacity: 0.7;
 }
 
@@ -178,12 +193,27 @@ header {
     transition: all 0.2s ease;
     font-size: 0.95rem;
     letter-spacing: 0.02em;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    transition: all 0.2s ease;
+    transform: translateX(-50%);
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
     color: var(--accent-color);
-    transform: translateY(-1px);
+}
+
+.nav-link:hover::after {
+    width: 80%;
 }
 
 /* Adjust main content for fixed header */
