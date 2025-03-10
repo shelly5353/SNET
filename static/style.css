@@ -325,11 +325,27 @@ main {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .action-button:hover {
     background-color: #357abd;
+    transform: translateY(-1px);
+}
+
+.action-button:disabled {
+    background-color: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
 }
 
 /* Alert messages */
@@ -337,23 +353,42 @@ main {
     padding: 1rem;
     border-radius: 4px;
     margin-bottom: 1rem;
+    border: none;
 }
 
 .alert-success {
-    background-color: var(--success-color);
-    color: #003300;
+    background-color: rgba(74, 255, 74, 0.1);
+    color: var(--success-color);
 }
 
 .alert-error {
-    background-color: var(--error-color);
-    color: #330000;
+    background-color: rgba(255, 74, 74, 0.1);
+    color: var(--error-color);
 }
 
-/* Loading indicator */
-.loading-indicator {
-    text-align: center;
-    padding: 1rem;
-    color: var(--text-secondary);
+.alert-warning {
+    background-color: rgba(255, 255, 74, 0.1);
+    color: #ffff4a;
+}
+
+.alert-info {
+    background-color: rgba(74, 158, 255, 0.1);
+    color: var(--accent-color);
+}
+
+.alert h5 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.alert p {
+    margin-bottom: 0.5rem;
+}
+
+.alert a.action-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    text-decoration: none;
 }
 
 /* Footer */
@@ -427,34 +462,10 @@ footer {
     padding: 1rem;
 }
 
-.alert {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
-
-.alert-warning {
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-    color: #856404;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    color: #0c5460;
+.form-text {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
 }
 
 /* UP Application specific styles */
@@ -487,6 +498,45 @@ footer {
     font-weight: 500;
     display: block;
     margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.action-button {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.7rem 1.4rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-button:hover {
+    background-color: #357abd;
+    transform: translateY(-1px);
+}
+
+.action-button:disabled {
+    background-color: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
 }
 
 .alert {

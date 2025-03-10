@@ -59,11 +59,14 @@ def up():
 @app.route('/up/process', methods=['POST'])
 def process_file():
     if 'file' not in request.files:
-        return jsonify({'success': False, 'error': 'No file uploaded'})
+        return jsonify({'success': False, 'error': 'לא נבחר קובץ'})
     
     file = request.files['file']
     if file.filename == '':
-        return jsonify({'success': False, 'error': 'No file selected'})
+        return jsonify({'success': False, 'error': 'לא נבחר קובץ'})
+    
+    if not allowed_file(file.filename):
+        return jsonify({'success': False, 'error': 'סוג קובץ לא נתמך'})
     
     try:
         # שמירת הקובץ
@@ -76,14 +79,21 @@ def process_file():
         from app import process_file as up_process
         result = up_process(filepath)
         
+        if not result:
+            return jsonify({'success': False, 'error': 'שגיאה בעיבוד הקובץ'})
+        
         # הכנת קובץ תוצאות
         output_filename = f"processed_{filename}"
         output_filepath = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
         
         # שמירת קובץ התוצאות
-        if isinstance(result, dict) and 'output_file' in result:
-            import shutil
-            shutil.copy2(result['output_file'], output_filepath)
+        if isinstance(result, dict):
+            if 'output_file' in result:
+                import shutil
+                shutil.copy2(result['output_file'], output_filepath)
+            elif 'processed_data' in result:
+                import pandas as pd
+                pd.DataFrame(result['processed_data']).to_excel(output_filepath, index=False)
         
         return jsonify({
             'success': True,
@@ -92,7 +102,7 @@ def process_file():
         })
         
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+        return jsonify({'success': False, 'error': f'שגיאה: {str(e)}'})
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

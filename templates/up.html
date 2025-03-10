@@ -13,14 +13,20 @@
                 <div class="form-group">
                     <label for="fileInput">בחר קובץ:</label>
                     <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls,.csv,.doc,.docx">
+                    <small class="form-text text-muted">קבצים נתמכים: Excel, CSV, Word</small>
                 </div>
-                <button class="action-button" onclick="processFile()">עבד קובץ</button>
+                <button class="action-button" onclick="processFile()" id="processButton">
+                    <span class="button-text">עבד קובץ</span>
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                </button>
             </div>
             <div class="col-md-6">
                 <div id="results" class="mt-3">
                     <h4>תוצאות:</h4>
                     <div id="output" class="output-container">
-                        <!-- תוצאות יוצגו כאן -->
+                        <div class="alert alert-info">
+                            בחר קובץ לעיבוד
+                        </div>
                     </div>
                 </div>
             </div>
@@ -32,6 +38,9 @@
 function processFile() {
     const fileInput = document.getElementById('fileInput');
     const output = document.getElementById('output');
+    const processButton = document.getElementById('processButton');
+    const buttonText = processButton.querySelector('.button-text');
+    const spinner = processButton.querySelector('.spinner-border');
     
     if (!fileInput.files.length) {
         output.innerHTML = '<div class="alert alert-warning">נא לבחור קובץ</div>';
@@ -42,6 +51,10 @@ function processFile() {
     const formData = new FormData();
     formData.append('file', file);
 
+    // Show loading state
+    buttonText.textContent = 'מעבד...';
+    spinner.classList.remove('d-none');
+    processButton.disabled = true;
     output.innerHTML = '<div class="alert alert-info">מעבד את הקובץ...</div>';
 
     fetch('/up/process', {
@@ -59,11 +72,17 @@ function processFile() {
                 </div>
             `;
         } else {
-            output.innerHTML = `<div class="alert alert-error">שגיאה: ${data.error}</div>`;
+            output.innerHTML = `<div class="alert alert-error">${data.error}</div>`;
         }
     })
     .catch(error => {
         output.innerHTML = `<div class="alert alert-error">שגיאה: ${error.message}</div>`;
+    })
+    .finally(() => {
+        // Reset button state
+        buttonText.textContent = 'עבד קובץ';
+        spinner.classList.add('d-none');
+        processButton.disabled = false;
     });
 }
 </script>
