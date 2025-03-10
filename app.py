@@ -20,7 +20,7 @@ PROJECTS = [
         'id': 'contact-extractor',
         'name': 'מחלץ אנשי קשר',
         'description': 'חילוץ אנשי קשר מקבצי Excel ו-Word',
-        'route': '/up'
+        'route': '/contact-extractor'
     },
     {
         'id': 'pdf-editor',
@@ -59,11 +59,11 @@ def pdf_editor():
 def robotic_parking():
     return render_template('robotic_parking.html', PROJECTS=PROJECTS)
 
-@app.route('/up')
-def up():
-    return render_template('up.html')
+@app.route('/contact-extractor')
+def contact_extractor():
+    return render_template('contact_extractor.html')
 
-@app.route('/up/process', methods=['POST'])
+@app.route('/contact-extractor/process', methods=['POST'])
 def process_file():
     if 'file' not in request.files:
         return jsonify({'success': False, 'error': 'לא נבחר קובץ'})

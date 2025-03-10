@@ -57,7 +57,7 @@ function processFile() {
     processButton.disabled = true;
     output.innerHTML = '<div class="alert alert-info">מעבד את הקובץ...</div>';
     
-    fetch('/up/process', {
+    fetch('/contact-extractor/process', {
         method: 'POST',
         body: formData
     })
