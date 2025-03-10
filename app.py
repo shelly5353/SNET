@@ -31,7 +31,7 @@ PROJECTS = [
 
 # Configure upload folder
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'xlsx', 'xls', 'csv', 'doc', 'docx'}
+ALLOWED_EXTENSIONS = {'xlsx', 'xls', 'csv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure upload folder exists
@@ -77,6 +77,8 @@ def process_file():
         # עיבוד הקובץ באמצעות האפליקציה UP
         sys.path.append(os.path.join(os.path.dirname(__file__), 'UP'))
         from app import process_file as up_process
+        
+        # קריאה לפונקציה המעודכנת
         result = up_process(filepath)
         
         if not result:
@@ -94,6 +96,9 @@ def process_file():
             elif 'processed_data' in result:
                 import pandas as pd
                 pd.DataFrame(result['processed_data']).to_excel(output_filepath, index=False)
+            elif 'excel_file' in result:
+                import shutil
+                shutil.copy2(result['excel_file'], output_filepath)
         
         return jsonify({
             'success': True,
