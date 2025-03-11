@@ -3,23 +3,115 @@
 {% block title %}PDF Easy Edits - SNET{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-5 pt-5">
+<div class="container-fluid mt-5 pt-5 pdf-editor-container">
     <div class="row">
         <div class="col-12">
             <div class="card bg-dark text-white">
                 <div class="card-header">
                     <h2 class="text-center mb-0">PDF Easy Edits</h2>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0" id="pdfEditorContainer">
                     <iframe 
+                        id="pdfEditorFrame"
                         src="https://pdf-easy-edits.onrender.com" 
                         style="width: 100%; height: calc(100vh - 250px); border: none;"
                         title="PDF Easy Edits Application"
-                        allowfullscreen>
+                        allowfullscreen
+                        onload="handleIframeLoad()">
                     </iframe>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.pdf-editor-container {
+    height: calc(100vh - 100px);
+    overflow: hidden;
+}
+
+#pdfEditorContainer {
+    position: relative;
+    height: 100%;
+}
+
+#pdfEditorFrame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('pdfEditorContainer');
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'loading-overlay';
+    loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+    container.appendChild(loadingOverlay);
+});
+
+function handleIframeLoad() {
+    const container = document.getElementById('pdfEditorContainer');
+    const loadingOverlay = container.querySelector('.loading-overlay');
+    if (loadingOverlay) {
+        setTimeout(() => {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => loadingOverlay.remove(), 500);
+        }, 1000);
+    }
+
+    const iframe = document.getElementById('pdfEditorFrame');
+    try {
+        // ניסיון לתקשר עם האפליקציה בתוך ה-iframe
+        iframe.contentWindow.postMessage({ type: 'init', source: 'parent' }, '*');
+    } catch (e) {
+        console.log('Communication with iframe not possible due to same-origin policy');
+    }
+}
+
+// האזנה להודעות מה-iframe
+window.addEventListener('message', function(event) {
+    if (event.origin !== 'https://pdf-easy-edits.onrender.com') return;
+    
+    try {
+        const data = event.data;
+        if (data.type === 'ready') {
+            console.log('PDF Editor is ready');
+        }
+    } catch (e) {
+        console.error('Error processing message from iframe:', e);
+    }
+});
+</script>
 {% endblock %} 
