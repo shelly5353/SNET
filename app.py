@@ -76,6 +76,10 @@ def index():
 def contact_extractor():
     return render_template('contact_extractor.html')
 
+@app.route('/pdf-easy-edits')
+def pdf_easy_edits():
+    return render_template('pdf_easy_edits.html')
+
 @app.route('/simulator')
 def simulator():
     return render_template('simulator.html')
