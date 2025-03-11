@@ -1,9 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNET - Shelly's Projects Storage Site</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="SNET - כלים מתקדמים לניהול ועיבוד מסמכים. כולל מחלץ אנשי קשר, PDF Easy Edits וסימולטור.">
+    <meta name="keywords" content="contact extractor, PDF Easy Edits, simulator, document management, אנשי קשר, עריכת PDF">
+    <meta name="author" content="Shelly">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="SNET - Shelly's Projects Storage Site">
+    <meta property="og:description" content="כלים מתקדמים לניהול ועיבוד מסמכים">
+    <meta property="og:image" content="{{ url_for('static', filename='logo.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+    
+    <title>{% block title %}SNET - Shelly's Projects Storage Site{% endblock %}</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.get('GA_MEASUREMENT_ID') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ config.get("GA_MEASUREMENT_ID") }}');
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
@@ -46,8 +66,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/pdf-editor" class="nav-link">
-                            <i class="fas fa-file-pdf me-2"></i>PDF Editor
+                        <a href="https://pdf-easy-edits.onrender.com" class="nav-link" target="_blank">
+                            <i class="fas fa-file-pdf me-2"></i>PDF Easy Edits
                         </a>
                     </li>
                     <li>

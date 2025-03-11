@@ -4,6 +4,21 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 import traceback
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Configure Sentry
+if os.getenv('SENTRY_DSN'):
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=1.0,
+        environment=os.getenv('FLASK_ENV', 'production')
+    )
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -32,10 +47,11 @@ except ImportError as e:
 
 app = Flask(__name__)
 
-# Configure upload folder
-UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+# Configure app from environment variables
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24).hex())
+app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
+app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))
+app.config['GA_MEASUREMENT_ID'] = os.getenv('GA_MEASUREMENT_ID')
 
 # Ensure upload directory exists
 try:
@@ -59,10 +75,6 @@ def index():
 @app.route('/contact-extractor')
 def contact_extractor():
     return render_template('contact_extractor.html')
-
-@app.route('/pdf-editor')
-def pdf_editor():
-    return render_template('pdf_editor.html')
 
 @app.route('/simulator')
 def simulator():

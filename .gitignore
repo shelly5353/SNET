@@ -41,4 +41,9 @@ https://github.com/[username]/SNET.git
 # Application specific
 uploads/
 *.log
-.env 
+.env
+.env.*
+!.env.example
+
+# New .env.* pattern
+.env.*
