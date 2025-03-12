@@ -4,21 +4,10 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 import traceback
-import sentry_sdk
-from sentry_sdk.integrations.flask import FlaskIntegration
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-
-# Configure Sentry
-if os.getenv('SENTRY_DSN'):
-    sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN'),
-        integrations=[FlaskIntegration()],
-        traces_sample_rate=1.0,
-        environment=os.getenv('FLASK_ENV', 'production')
-    )
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
