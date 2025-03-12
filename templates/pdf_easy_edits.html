@@ -16,7 +16,7 @@
                     </button>
                 </div>
                 <div class="card-body p-0" id="pdfEditorContainer">
-                    <div id="iframeWrapper" class="position-relative">
+                    <div id="iframeWrapper" class="position-relative" style="min-height: 800px;">
                         <iframe 
                             id="pdfEditorFrame"
                             src="https://pdf-easy-edits.vercel.app" 
@@ -24,8 +24,9 @@
                             height="800" 
                             frameborder="0"
                             allowfullscreen
-                            sandbox="allow-same-origin allow-scripts allow-forms allow-downloads"
-                            class="rounded-bottom"
+                            sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-popups"
+                            class="rounded-bottom position-absolute top-0 start-0"
+                            style="border: none; min-height: 800px;"
                         ></iframe>
                     </div>
                     <div id="loadingOverlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex flex-column justify-content-center align-items-center">
@@ -54,24 +55,48 @@
 </div>
 
 <script>
+    let isLoading = false;
+    const iframe = document.getElementById('pdfEditorFrame');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const errorOverlay = document.getElementById('errorOverlay');
+    
     function reloadIframe() {
-        const iframe = document.getElementById('pdfEditorFrame');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const errorOverlay = document.getElementById('errorOverlay');
+        if (isLoading) return;
         
+        isLoading = true;
         loadingOverlay.classList.remove('d-none');
         errorOverlay.classList.add('d-none');
         
-        iframe.src = iframe.src;
+        try {
+            iframe.src = iframe.src;
+        } catch (error) {
+            console.error('Error reloading iframe:', error);
+            showError();
+        }
     }
     
-    document.getElementById('pdfEditorFrame').addEventListener('load', function() {
-        document.getElementById('loadingOverlay').classList.add('d-none');
+    function showError() {
+        isLoading = false;
+        loadingOverlay.classList.add('d-none');
+        errorOverlay.classList.remove('d-none');
+    }
+    
+    iframe.addEventListener('load', function() {
+        isLoading = false;
+        loadingOverlay.classList.add('d-none');
     });
     
-    document.getElementById('pdfEditorFrame').addEventListener('error', function() {
-        document.getElementById('loadingOverlay').classList.add('d-none');
-        document.getElementById('errorOverlay').classList.remove('d-none');
+    iframe.addEventListener('error', function() {
+        showError();
+    });
+
+    // Handle iframe resize messages from the embedded app
+    window.addEventListener('message', function(event) {
+        if (event.origin !== 'https://pdf-easy-edits.vercel.app') return;
+        
+        if (event.data && event.data.type === 'resize') {
+            iframe.style.height = event.data.height + 'px';
+        }
     });
 </script>
 {% endblock %} 
