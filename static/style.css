@@ -61,7 +61,7 @@ header {
 .site-branding {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     text-decoration: none;
     color: var(--text-primary);
     margin-left: 3rem;
