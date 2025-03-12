@@ -21,7 +21,7 @@
                             style="width: 100%; height: calc(100vh - 250px); border: none;"
                             title="PDF Easy Edits Application"
                             allowfullscreen
-                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-downloads allow-modals allow-top-navigation"
                             onload="handleIframeLoad()"
                             onerror="handleIframeError()">
                         </iframe>
@@ -155,38 +155,48 @@ function reloadIframe() {
 function handleIframeLoad() {
     const iframe = document.getElementById('pdfEditorFrame');
     try {
+        console.log('Iframe load event triggered');
         // בדיקה שהאפליקציה נטענה בהצלחה
         if (iframe.contentWindow.document.readyState === 'complete') {
+            console.log('Iframe content fully loaded');
             hideLoading();
             iframeLoadAttempts = 0;
         } else {
+            console.log('Iframe content not fully loaded yet');
             iframeLoadAttempts++;
             if (iframeLoadAttempts >= MAX_LOAD_ATTEMPTS) {
+                console.log('Max load attempts reached');
                 showError();
             }
         }
     } catch (e) {
-        console.log('Cannot access iframe content due to same-origin policy');
+        console.error('Error accessing iframe content:', e);
+        // Even if we can't access the content, if the iframe loaded without errors, we'll hide the loading
         hideLoading();
     }
 }
 
 function handleIframeError() {
+    console.error('Iframe error occurred');
     iframeLoadAttempts++;
     if (iframeLoadAttempts >= MAX_LOAD_ATTEMPTS) {
+        console.log('Max error attempts reached, showing error overlay');
         showError();
     } else {
+        console.log(`Retrying in 2 seconds (attempt ${iframeLoadAttempts}/${MAX_LOAD_ATTEMPTS})`);
         setTimeout(reloadIframe, 2000);
     }
 }
 
 // טעינה ראשונית
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initial page load');
     showLoading();
     
     // טיימאאוט לטעינה
     setTimeout(function() {
         if (document.getElementById('loadingOverlay').style.display === 'flex') {
+            console.log('Load timeout reached');
             handleIframeError();
         }
     }, LOAD_TIMEOUT);
