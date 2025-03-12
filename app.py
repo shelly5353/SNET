@@ -70,6 +70,11 @@ def pdf_easy_edits():
     """Route for the PDF Easy Edits application."""
     return render_template('pdf_easy_edits.html')
 
+@app.route('/file-compressor')
+def file_compressor():
+    """Route for the File Compressor application."""
+    return render_template('file_compressor.html')
+
 @app.route('/simulator')
 def simulator():
     return render_template('simulator.html')

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}File Compressor - SNET{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark text-white">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">
+                        <i class="fas fa-file-archive me-2"></i>File Compressor
+                    </h2>
+                    <button class="btn btn-outline-light" onclick="manualReload()">
+                        <i class="fas fa-sync-alt me-1"></i>רענון
+                    </button>
+                </div>
+                <div class="card-body p-0" id="fileCompressorContainer">
+                    <div id="iframeWrapper" class="position-relative" style="min-height: 800px;">
+                        <iframe 
+                            id="fileCompressorFrame"
+                            src="https://file-compressor-psi.vercel.app" 
+                            width="100%" 
+                            height="800" 
+                            frameborder="0"
+                            allowfullscreen
+                            sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-popups"
+                            class="rounded-bottom position-absolute top-0 start-0"
+                            style="border: none; min-height: 800px; transform: translate3d(0,0,0);"
+                        ></iframe>
+                    </div>
+                    <div id="loadingOverlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex flex-column justify-content-center align-items-center">
+                        <div class="spinner-border text-light mb-3" role="status">
+                            <span class="visually-hidden">טוען...</span>
+                        </div>
+                        <p class="text-light mb-0">טוען את דוחס הקבצים...</p>
+                    </div>
+                    <div id="errorOverlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex justify-content-center align-items-center">
+                        <div class="text-center">
+                            <div class="alert alert-danger mx-4">
+                                <h4 class="alert-heading mb-3">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>שגיאה בטעינה
+                                </h4>
+                                <p class="mb-3">הייתה בעיה בטעינת דוחס הקבצים. אנא נסו שוב.</p>
+                                <button class="btn btn-primary" onclick="manualReload()">
+                                    <i class="fas fa-redo me-2"></i>נסה שוב
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isLoading = false;
+    let reloadTimeout = null;
+    const iframe = document.getElementById('fileCompressorFrame');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const errorOverlay = document.getElementById('errorOverlay');
+    const RELOAD_DELAY = 500; // חצי שנייה דיחוי
+    
+    function debounce(func, wait) {
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(reloadTimeout);
+                func(...args);
+            };
+            clearTimeout(reloadTimeout);
+            reloadTimeout = setTimeout(later, wait);
+        };
+    }
+    
+    function reloadIframe() {
+        if (isLoading) return;
+        
+        isLoading = true;
+        loadingOverlay.classList.remove('d-none');
+        errorOverlay.classList.add('d-none');
+        
+        try {
+            const currentSrc = iframe.src;
+            iframe.src = 'about:blank';
+            
+            // מחכים רגע קט לפני הטעינה מחדש
+            setTimeout(() => {
+                iframe.src = currentSrc;
+            }, 50);
+        } catch (error) {
+            console.error('Error reloading iframe:', error);
+            showError();
+        }
+    }
+    
+    // פונקציה לרענון ידני (מהכפתור)
+    function manualReload() {
+        clearTimeout(reloadTimeout);
+        reloadIframe();
+    }
+    
+    // פונקציה לרענון אוטומטי עם דיחוי
+    const debouncedReload = debounce(() => {
+        if (!isLoading) {
+            reloadIframe();
+        }
+    }, RELOAD_DELAY);
+    
+    function showError() {
+        isLoading = false;
+        loadingOverlay.classList.add('d-none');
+        errorOverlay.classList.remove('d-none');
+    }
+    
+    iframe.addEventListener('load', function() {
+        if (iframe.src !== 'about:blank') {
+            isLoading = false;
+            loadingOverlay.classList.add('d-none');
+        }
+    });
+    
+    iframe.addEventListener('error', function() {
+        showError();
+    });
+
+    // טיפול בהודעות מהאפליקציה המוטמעת
+    window.addEventListener('message', function(event) {
+        if (event.origin !== 'https://file-compressor-psi.vercel.app') return;
+        
+        if (event.data) {
+            // אם יש צורך ברענון
+            if (event.data.type === 'reload') {
+                debouncedReload();
+            }
+            // אם צריך לשנות גובה
+            else if (event.data.type === 'resize') {
+                iframe.style.height = event.data.height + 'px';
+            }
+        }
+    });
+</script>
+{% endblock %} 
