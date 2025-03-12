@@ -78,6 +78,7 @@ def contact_extractor():
 
 @app.route('/pdf-easy-edits')
 def pdf_easy_edits():
+    """Route for the PDF Easy Edits application."""
     return render_template('pdf_easy_edits.html')
 
 @app.route('/simulator')
