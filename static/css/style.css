@@ -1,0 +1,43 @@
+.container {
+    max-width: 1200px;
+}
+
+#pdfCanvas {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+}
+
+#pageInfo {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.4rem 1rem;
+    }
+    
+    #pageInfo {
+        font-size: 1rem;
+    }
+} 
